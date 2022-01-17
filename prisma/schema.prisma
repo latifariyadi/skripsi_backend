@@ -1,0 +1,196 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Admin{
+  id                  Int               @id @default(autoincrement())
+  email               String            @unique
+  password            String            
+  role                String            //superadmin admin
+  createdAt           DateTime          @default(now())
+  updatedAt           DateTime          @updatedAt
+
+  avatar              Admin_avatar?
+}
+
+model Admin_avatar{
+  id                  Int               @id @default(autoincrement())
+  filename            String
+  admin_id            Int
+  location            String
+  url                 String
+  createdAt           DateTime          @default(now())
+  updatedAt           DateTime          @updatedAt
+
+  admin               Admin             @relation(fields: [admin_id], references: [id], onDelete: Cascade)
+
+}
+
+model Siswa {
+  id                  Int               @id @default(autoincrement())
+  nama_lengkap        String
+  email               String            @unique
+  password            String    
+  telp                String
+  alamat_lengkap      String  
+  nis                 String            
+  createdAt           DateTime          @default(now())
+  updatedAt           DateTime          @updatedAt
+
+  //relation
+  avatar_siswa        Avatar_siswa?
+  kelas               Kelas?
+  walimurid           Walimurid?
+  tugas               Tugas[]
+
+}
+
+model Avatar_siswa{
+  id                  Int               @id @default(autoincrement())
+  filename            String
+  siswa_id            Int
+  location            String
+  url                 String
+  createdAt           DateTime          @default(now())
+  updatedAt           DateTime          @updatedAt
+
+  siswa               Siswa             @relation(fields: [siswa_id], references: [id], onDelete: Cascade)
+}
+
+model Kelas{
+  id                  Int               @id @default(autoincrement())
+  kelas               String
+  walikelas           Int
+  siswa_id            Int
+  createdAt           DateTime          @default(now())
+  updatedAt           DateTime          @updatedAt
+
+  //relation
+  siswa               Siswa             @relation(fields: [siswa_id], references: [id], onDelete: Cascade)
+  guru                Guru              @relation(fields: [walikelas], references: [id])
+  jadwal              Jadwal[]
+  tugas               Tugas[]
+
+}
+
+model Guru{
+  id                  Int               @id @default(autoincrement())
+  nama_lengkap        String
+  email               String            @unique
+  password            String    
+  telp                String
+  alamat_lengkap      String?  
+  createdAt           DateTime          @default(now())
+  updatedAt           DateTime          @updatedAt
+
+  //relation
+  kelas               Kelas?
+  matapelarajaran     Matapelajaran?
+  avatar_guru         Avatar_guru?
+
+}
+
+model Avatar_guru{
+  id                  Int               @id @default(autoincrement())
+  filename            String
+  guru_id             Int
+  location            String
+  url                 String
+  createdAt           DateTime          @default(now())
+  updatedAt           DateTime          @updatedAt
+
+  guru                Guru              @relation(fields: [guru_id], references: [id], onDelete: Cascade)
+}
+
+model Matapelajaran{
+  id                  Int               @id @default(autoincrement())
+  nama                String
+  guru_id             Int
+  createdAt           DateTime          @default(now())
+  updatedAt           DateTime          @updatedAt
+
+  guru                Guru              @relation(fields: [guru_id], references: [id], onDelete: Cascade)
+  jadwal              Jadwal[]
+  tugas               Tugas[]
+}
+
+model Walimurid{
+  id                  Int               @id @default(autoincrement())
+  nama                String
+  email               String
+  telp                String
+  alamat_lengkap      String
+  siswa_id            Int
+  pekerjaan           String
+  createdAt           DateTime          @default(now())
+  updatedAt           DateTime          @updatedAt
+
+  siswa               Siswa             @relation(fields: [siswa_id], references: [id], onDelete: Cascade)
+
+}
+
+model Jadwal{
+  id                  Int               @id @default(autoincrement())
+  kelas_id            Int
+  matapelajaran_id    Int       
+  hari                String
+  jam                 DateTime
+  createdAt           DateTime          @default(now())
+  updatedAt           DateTime          @updatedAt
+
+  //
+  kelas               Kelas             @relation(fields: [kelas_id], references: [id], onDelete: Cascade)
+  matapelarajan       Matapelajaran     @relation(fields: [matapelajaran_id], references: [id], onDelete: Cascade)
+}
+
+model Tugas{
+  id                  Int               @id @default(autoincrement())
+  matapelajaran_id    Int 
+  kelas_id            Int
+  siswa_id            Int
+  tugas_banner_id     Int
+  judul               String
+  materi              String
+  akhir_kumpul        DateTime
+  link                String
+  createdAt           DateTime
+  updatedAt           DateTime
+
+  //relation
+  kelas               Kelas             @relation(fields: [kelas_id], references: [id], onDelete: Cascade)
+  siswa               Siswa             @relation(fields: [siswa_id], references: [id], onDelete: Cascade)
+  matapelajaran       Matapelajaran     @relation(fields: [matapelajaran_id], references: [id], onDelete: Cascade)
+  tugas_banner        Tugas_banner?
+}
+
+model Tugas_banner{
+  id                  Int               @id @default(autoincrement())
+  filename            String
+  tugas_id            Int
+  location            String
+  url                 String
+  createdAt           DateTime          @default(now())
+  updatedAt           DateTime          @updatedAt
+
+  //rel
+  tugas               Tugas             @relation(fields: [tugas_id], references: [id], onDelete: Cascade)
+
+}
+
+model Notifikasi{
+  id                Int               @id @default(autoincrement())
+  judul             String
+  deskripsi         String
+  kelas_id          Int?
+  siswa_id          Int?
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+}
