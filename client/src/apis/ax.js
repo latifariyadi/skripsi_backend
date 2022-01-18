@@ -1,9 +1,9 @@
 import axios from "axios"
 
 const ax = axios.create({
-	// withCredentials: true,
-	baseURL: "http://localhost:5000/api",
+	baseURL: "/api",
 	responseType: "json",
+	withCredentials: true,
 })
 
 export default ax

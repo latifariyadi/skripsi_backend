@@ -45,5 +45,7 @@ export const authSiswa = async (req, res, next) => {
 		return
 	}
 
+	req.siswa = jwt.decode(ck)
+
 	next()
 }

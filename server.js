@@ -7,6 +7,7 @@ import admin_routes from "./routes/admin_routes"
 import multer from "fastify-multer"
 import siswa_route from "./routes/siswa_routes"
 import guru_route from "./routes/guru_routes"
+import pageconfig_route from "./routes/pageconfig_routes"
 env.config()
 
 const app = Fastify({
@@ -15,7 +16,7 @@ const app = Fastify({
 
 app.register(multer.contentParser)
 app.register(fastifyCookie)
-app.register(require("fastify-express"))
+// app.register(require("fastify-express"))
 app.register(require("fastify-static"), {
 	root: path.join(__dirname, "static/"),
 })
@@ -35,6 +36,9 @@ app.register(siswa_route, {
 	prefix: "/api",
 })
 app.register(guru_route, {
+	prefix: "/api",
+})
+app.register(pageconfig_route, {
 	prefix: "/api",
 })
 
