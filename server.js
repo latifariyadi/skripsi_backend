@@ -7,6 +7,13 @@ import admin_routes from "./routes/admin_routes"
 import multer from "fastify-multer"
 import siswa_route from "./routes/siswa_routes"
 import guru_route from "./routes/guru_routes"
+import matpel_routes from "./routes/matpel_routes"
+import kelas_routes from "./routes/kelas_routes"
+import jadwal_routes from "./routes/jadwal_routes"
+import walimurid_routes from "./routes/walimurid_routes"
+import tugas_routes from "./routes/tugas_routes"
+import notifikasi_routes from "./routes/notifikasi_routes"
+import pengumuman_routes from "./routes/pengumuman_routes"
 env.config()
 
 const app = Fastify({
@@ -37,6 +44,28 @@ app.register(siswa_route, {
 app.register(guru_route, {
 	prefix: "/api",
 })
+app.register(matpel_routes ,{
+	prefix: "/api",
+})
+app.register(kelas_routes ,{
+	prefix: "/api",
+})
+app.register(jadwal_routes ,{
+	prefix: "/api",
+})
+app.register(walimurid_routes ,{
+	prefix: "/api",
+})
+app.register(tugas_routes ,{
+	prefix: "/api",
+})
+app.register(notifikasi_routes ,{
+	prefix: "/api",
+})
+app.register(pengumuman_routes ,{
+	prefix: "/api",
+})
+
 
 //listener
 app.listen(process.env.PORT, () => {
