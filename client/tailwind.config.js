@@ -19,6 +19,10 @@ module.exports = {
 				"success-medium": "#BFFFBA",
 				"success-light": "#E5FFE2",
 			},
+			Image: {
+				"card-banner":
+					"https://images.pexels.com/photos/9454915/pexels-photo-9454915.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
+			},
 		},
 	},
 	plugins: [],

@@ -14,6 +14,7 @@ import walimurid_routes from "./routes/walimurid_routes"
 import tugas_routes from "./routes/tugas_routes"
 import notifikasi_routes from "./routes/notifikasi_routes"
 import pengumuman_routes from "./routes/pengumuman_routes"
+import pageconfig_route from "./routes/pageconfig_routes"
 env.config()
 
 const app = Fastify({
@@ -22,7 +23,7 @@ const app = Fastify({
 
 app.register(multer.contentParser)
 app.register(fastifyCookie)
-app.register(require("fastify-express"))
+// app.register(require("fastify-express"))
 app.register(require("fastify-static"), {
 	root: path.join(__dirname, "static/"),
 })
@@ -66,6 +67,9 @@ app.register(pengumuman_routes ,{
 	prefix: "/api",
 })
 
+app.register(pageconfig_route, {
+	prefix: "/api",
+})
 
 //listener
 app.listen(process.env.PORT, () => {

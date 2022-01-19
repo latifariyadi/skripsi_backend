@@ -1,19 +1,21 @@
 import React from "react"
-import { siswa_login } from "../apis/siswa_api"
+import { siswa_login, siswa_send_cookie } from "../apis/siswa_api"
+import { useNavigate } from "react-router-dom"
 
 const LoginPage = () => {
+	const navigate = useNavigate()
 	const handleLogin = (e) => {
 		e.preventDefault()
 		siswa_login({
 			email: e.target.email.value,
-			password: e.target.email.value,
+			password: e.target.password.value,
 		})
 			.then((result) => {
-				if (result.status == 200) {
-					alert("login berhasil")
+				if (result.data.success) {
+					// alert("login berhasil")
+					sessionStorage.setItem("token", result.data.token)
+					navigate("/dashboard")
 				}
-
-				console.info(result.response.status)
 			})
 			.catch((err) => {
 				console.error(err.response.data)

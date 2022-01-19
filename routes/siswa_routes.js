@@ -118,7 +118,7 @@ const siswa_route = async (sis = fastify(), options) => {
 				process.env.SISWA_SECRET_KEY
 			)
 
-			res.cookie("_siswa", token, { httpOnly: true })
+			res.setCookie("_siswa", token, { httpOnly: true })
 			res.status(200).send({
 				success: true,
 				token: token,
@@ -191,7 +191,8 @@ const siswa_route = async (sis = fastify(), options) => {
 	//siswa logout
 	sis.post("/siswa_logout", async (req, res) => {
 		try {
-			res.clearCookie("_siswa")
+			//reset cookie
+			res.cookie("_siswa", null, { expires: Date.now() })
 			res.status(200).send({
 				success: true,
 				msg: "berhasil logout",
@@ -202,6 +203,15 @@ const siswa_route = async (sis = fastify(), options) => {
 				error: error.message,
 			})
 		}
+	})
+
+	//siswa send back cookie
+	sis.post("/siswa_send_cookie", (req, res) => {
+		let ck = req.cookies["_siswa"]
+		res.status(200).send({
+			msg: "silakan masuk bro",
+			cookie: ck,
+		})
 	})
 }
 
