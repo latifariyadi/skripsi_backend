@@ -45,14 +45,18 @@ const JadwalList = ({
 
 
     return (
-        <div className={`list_jadwal w-full h-16 flex ${generatedColor(index, "medium")} rounded-lg`}>
-            <div className="kiri w-[70%] flex flex-col p-2 pl-4">
-                <h1 className='text-gray-500 text-md font-bold'>{index}. {" "} {pelajaran}</h1>
-                <p className='text-gray-400 text-[.8rem]'>{guru}</p>
-            </div>
-            <div className={`kanan h-full ${generatedColor(index, "dark")} flex justify-center items-center ml-auto w-[40%] rounded-r-lg`}>
-                <p className='text-white font-bold text-[.8rem]'>{jam}</p>
-            </div>
+        <div className={`list_jadwal w-full h-16 flex  rounded-lg`}>
+         {index && (
+             <>
+                <div className={`kiri w-[70%] flex flex-col p-2 pl-4 ${generatedColor(index, "medium")}`}>
+                    <h1 className='text-gray-500 text-md font-bold'>{index}. {" "} {pelajaran}</h1>
+                    <p className='text-gray-400 text-[.8rem]'>{guru}</p>
+                </div>
+                <div className={`kanan h-full ${generatedColor(index, "dark")} flex justify-center items-center ml-auto w-[40%] rounded-r-lg`}>
+                    <p className='text-white font-bold text-[.8rem]'>{jam}</p>
+                </div>
+            </>
+         )}
         </div>
     )
 }
@@ -72,7 +76,7 @@ const CardJadwal = () => {
             <p className='text-gray-400 text-sm'>Semester 1 Tahun ajaran 2021 - 2022</p>
             
             <div className="container_jadwal mt-4 w-full flex flex-col gap-2">
-                <JadwalList />
+                <JadwalList index={1}/>
                 <JadwalList index={2}/>
             </div>
 

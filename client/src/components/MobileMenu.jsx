@@ -8,9 +8,19 @@ import {
 	AiOutlineLogout,
 } from "react-icons/ai"
 import { siswa_logout } from "../apis/siswa_api"
+import {Modal} from "antd"
 
 const MobileMenu = () => {
 	const [showMenu, setShowMenu] = useState(false)
+
+	const handleLogOut = ()=>{
+		Modal.confirm({
+			title : "yakin logout ?",
+			onOk : ()=>{
+				siswa_logout()
+			}
+		})
+	}
 
 	return (
 		<menu
@@ -54,10 +64,7 @@ const MobileMenu = () => {
 					</div>
 					<div
 						className="menu-items h-16 w-full flex justify-center items-center"
-						onClick={() => {
-							// setShowMenu(!showMenu)
-							siswa_logout()
-						}}
+						onClick={handleLogOut}
 					>
 						<AiOutlineLogout />
 					</div>

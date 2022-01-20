@@ -3,6 +3,9 @@ import React from "react"
 const SiswaCard = ({
 	banner = "https://images.pexels.com/photos/8657665/pexels-photo-8657665.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
 	avatar = "https://images.pexels.com/photos/2613330/pexels-photo-2613330.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
+	nama_lengkap = "selastio fadli",
+	nis = "131313131313",
+	wali_kelas = "Ibu Rosita Rahmawati"
 }) => {
 	return (
 		<div className="siswa_card w-full h-[300px] flex flex-col rounded-xl bg-white shadow-lg p-2 my-4">
@@ -27,13 +30,13 @@ const SiswaCard = ({
 
 			<div className="content_area flex p-4 mt-6 flex-col">
 				<p className="text-gray-400 text-lg font-semibold">
-					Bunga Selva Banati
+					{nama_lengkap}
 				</p>
 				<p className="text-lg text-gray-400 font-light">
-					10123070127307091823808
+					{nis}
 				</p>
 				<small className="text-[.6rem] text-gray-400">
-					wali kelas : Ibu Rosita Angraini
+					wali kelas : {wali_kelas}
 				</small>
 			</div>
 		</div>

@@ -1,7 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@import url("antd/dist/antd.css");
+@import url('antd/dist/antd.css');
 
 * {
 	box-sizing: border-box;
@@ -25,4 +25,10 @@ body {
 code {
 	font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
 		monospace;
+}
+
+
+.ant-btn-primary {
+	background-color: #FF6363 !important;
+	border: none !important;
 }
