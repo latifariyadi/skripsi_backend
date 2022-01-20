@@ -47,10 +47,10 @@ const guru_route = async (gr = fastify(), options) => {
 	//guru read
 	gr.get("/guru_read", async (req, res) => {
 		try {
-			const { page = 0, limit = 10 } = await req.query
-			let skip = page * limit
-
-			const result = await prisma.guru.findMany()
+			
+		const result = await prisma.guru.findMany({
+			orderBy : {id : "desc"}
+		})
 
 			res.status(200).send({
 				success: true,
@@ -60,6 +60,60 @@ const guru_route = async (gr = fastify(), options) => {
 			res.status(500).send({
 				success: false,
 				error: error.message,
+			})
+		}
+	})
+
+
+	//		UPDATE GURU
+	gr.put("/guru_update/:id", async(req, res)=>{
+		try {
+			const {id} = await req.params
+			const data = await req.body
+			const result = await prisma.guru.update({
+				where : {
+					id : parseInt(id)
+				},
+				data : data
+			})
+			
+			if(!result) {
+				res.status(500).send({
+					success : false,
+					msg : "Gagal update data guru"
+				})
+				return
+			}
+
+			res.status(200).send({
+				success : true,
+				query : result
+			})
+		} catch (error) {
+			res.status(500).send({
+				success : false,
+				error : error.message
+			})
+		}
+	})
+
+	//		GURU DELETE
+	gr.delete("/guru_delete/:id", async(req, res)=>{
+		try {
+			const {id} = await req.params
+			const result = await prisma.guru.delete({
+				where : {
+					id : parseInt(id)
+				}
+			})
+			res.status(201).send({
+				success : true,
+				msg :"Berhasil delete data guru"
+			})
+		} catch (error) {
+			res.status(500).send({
+				success : false,
+				error : error.message
 			})
 		}
 	})
