@@ -47,13 +47,10 @@ const guru_route = async (gr = fastify(), options) => {
 	//guru read
 	gr.get("/guru_read", async (req, res) => {
 		try {
-			const { page = 0, limit = 10 } = await req.query
-			let skip = page * limit
-
-			const result = await prisma.guru.findMany({
-				skip : parseInt(skip),
-				limit : parseInt(limit)
-			})
+			
+		const result = await prisma.guru.findMany({
+			orderBy : {id : "desc"}
+		})
 
 			res.status(200).send({
 				success: true,
@@ -104,7 +101,7 @@ const guru_route = async (gr = fastify(), options) => {
 	gr.delete("/guru_delete/:id", async(req, res)=>{
 		try {
 			const {id} = await req.params
-			const result = await prisma.kelas.delete({
+			const result = await prisma.guru.delete({
 				where : {
 					id : parseInt(id)
 				}

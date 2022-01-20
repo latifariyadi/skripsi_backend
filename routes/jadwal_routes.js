@@ -28,14 +28,13 @@ const jadwal_routes = async (jadwal = festify(), Option) =>{
     //       READ ALL JADWAL
     jadwal.get("/jadwal_read", async(req, res)=>{
         try {
-            const data = await req.body
             const { page = 0, limit = 10} = await req.query
 
             let skip = page * limit
 
             const result = await prisma.jadwal.findMany({
                 skip : parseInt(skip),
-                limit : parseInt(limit)
+                take : parseInt(limit)
             })
 
             const count = await prisma.jadwal.count()

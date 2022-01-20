@@ -31,14 +31,13 @@ const kelas_routes = async (kelas = festify(), Option) =>{
     //          READ ALL KELAS
     kelas.get("/kelas_read", async(req, res)=>{
         try {
-            const data = await req.body
             const { page = 0, limit = 10 } = await req.query
 
             let skip = page * limit
 
             const result = await prisma.kelas.findMany({
                 skip : parseInt(skip),
-                limit : parseInt(limit)
+                take : parseInt(limit)
             })
 
             res.status(200).send({
