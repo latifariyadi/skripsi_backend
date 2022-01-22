@@ -37,7 +37,7 @@ const matpel_routes = async (matpel = festify(), options) => {
 
             const result = await prisma.matpel.findMany({
                 skip : pareseInt(skip),
-                limit: pareseInt(limit)
+                take: pareseInt(limit)
             })
 
             res.status(200).send({

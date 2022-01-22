@@ -36,7 +36,7 @@ const pengumuman_routes = async (pengumuman = festify(), Option) =>{
             let skip = page * limit
             const result = await prisma.pengumuman.findMany({
                 skip : parseInt(skip),
-                limit : parseInt(limit)
+                take : parseInt(limit)
             })
             res.status(200).send({
                 success : true,
