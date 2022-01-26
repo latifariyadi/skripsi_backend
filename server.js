@@ -19,7 +19,7 @@ import auth_routes from "./routes/auth_routes"
 env.config()
 
 const app = Fastify({
-	logger: false,
+	logger: true,
 })
 
 app.register(multer.contentParser)
