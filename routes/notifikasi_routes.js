@@ -37,7 +37,7 @@ const notifikasi_routes = async (notifikasi = festify(), Option) => {
 
             const result = await prisma.notifikasi.findMany({
                 skip : parseInt(skip),
-                limit : parseInt(limit)
+                take : parseInt(limit)
             })
             res.status(200).send({
                 success : true,

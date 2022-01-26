@@ -37,7 +37,7 @@ const walimurid_routes = async (walimurid = festify(), Option) =>{
 
             const result = await prisma.walimurid.findMany({
                 skip : parseInt(skip),
-                limit : parseInt(limit)
+                take : parseInt(limit)
             })
 
             res.status(200).send({
