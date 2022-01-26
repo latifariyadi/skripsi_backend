@@ -47,7 +47,7 @@ const siswa_route = async (sis = fastify(), options) => {
 	})
 
 	//read siswa
-	sis.get("/siswa_read", { preHandler: authSiswa }, async (req, res) => {
+	sis.get("/siswa_read", { preHandler: authCheck }, async (req, res) => {
 		try {
 			const { page = 0, limit = 10 } = await req.query
 			let skip = page * limit
@@ -57,12 +57,24 @@ const siswa_route = async (sis = fastify(), options) => {
 				take: parseInt(limit),
 				select: {
 					id: true,
+					nama_lengkap: true,
 					email: true,
 					telp: true,
 					alamat_lengkap: true,
 					nis: true,
-					kelas: true,
+					kelas_id: true,
 					walimurid: true,
+					kelas: {
+						select: {
+							kelas: true,
+							sub_kelas: true,
+							walikelas: {
+								select: {
+									nama_lengkap: true,
+								},
+							},
+						},
+					},
 				},
 			})
 
@@ -157,7 +169,7 @@ const siswa_route = async (sis = fastify(), options) => {
 	)
 
 	//update siswa
-	sis.put("/siswa_update/:id", { preHandler: authSiswa }, async (req, res) => {
+	sis.put("/siswa_update/:id", { preHandler: authCheck }, async (req, res) => {
 		try {
 			const { id } = await req.params
 			const data = await req.body
@@ -179,6 +191,7 @@ const siswa_route = async (sis = fastify(), options) => {
 			res.status(201).send({
 				success: true,
 				msg: "berhasil update data siswa",
+				query: result,
 			})
 		} catch (error) {
 			res.status(500).send({
@@ -196,6 +209,47 @@ const siswa_route = async (sis = fastify(), options) => {
 			res.status(200).send({
 				success: true,
 				msg: "berhasil logout",
+			})
+		} catch (error) {
+			res.status(500).send({
+				success: false,
+				error: error.message,
+			})
+		}
+	})
+
+	sis.get("/siswa_find/:id", async (req, res) => {
+		try {
+			const { id } = await req.params
+			const findSiswa = await prisma.siswa.findUnique({
+				where: {
+					id: parseInt(id),
+				},
+				include: {
+					kelas: {
+						select: {
+							id: true,
+							kelas: true,
+							sub_kelas: true,
+						},
+					},
+				},
+			})
+
+			if (!findSiswa) {
+				res.status(404).send({
+					success: false,
+					msg: "data siswa tidak ditemukan",
+				})
+				return
+			}
+
+			res.status(200).send({
+				success: true,
+				query: {
+					...findSiswa,
+					password: "secret",
+				},
 			})
 		} catch (error) {
 			res.status(500).send({

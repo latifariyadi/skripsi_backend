@@ -9,10 +9,8 @@ const matpel_routes = async (matpel = festify(), options) => {
         try {
             const data = await req.body
 
-            const result = await prisma.matpel.create({
-                data : {
-                    ...data
-                }
+            const result = await prisma.matapelajaran.create({
+                data : data
             })
 
             res.status(201).send({
@@ -30,14 +28,20 @@ const matpel_routes = async (matpel = festify(), options) => {
     //      READ ALL MATPEL
     matpel.get("/matpel_read", async(req, res)=>{
         try {
-            const data = await req.body
             const { page = 0, limit = 10 } = await req.query
             
             let skip = page * limit
 
-            const result = await prisma.matpel.findMany({
-                skip : pareseInt(skip),
-                limit: pareseInt(limit)
+            const result = await prisma.matapelajaran.findMany({
+                skip : parseInt(skip),
+                take : parseInt(limit),
+                include : {
+                    guru : {
+                        select : {
+                            nama_lengkap : true
+                        }
+                    }
+                }
             })
 
             res.status(200).send({
@@ -58,9 +62,9 @@ const matpel_routes = async (matpel = festify(), options) => {
         try {
             const { id } = req.params
             const data = await req.body
-            const result = await prisma.matpel.update({
+            const result = await prisma.matapelajaran.update({
                 where : {
-                    id : pareseInt(id),
+                    id : parseInt(id),
                 },
                 data : data
             })
@@ -89,7 +93,7 @@ const matpel_routes = async (matpel = festify(), options) => {
     matpel.delete("/matpel_delete/:id", async (req, res)=>{
         try {
             const { id } = await req.params
-            const result = await prisma.matpel.delete({
+            const result = await prisma.matapelajaran.delete({
                 where : {
                     id : parseInt(id)
                 }
@@ -110,7 +114,7 @@ const matpel_routes = async (matpel = festify(), options) => {
     matpel.post("/matpel_find", async (req, res)=>{
         try {
             const {filter} = await req.body
-            const result = await prisma.matpel.findUnique({
+            const result = await prisma.matapelajaran.findUnique({
                 where : filter
             })
 

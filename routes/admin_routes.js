@@ -5,6 +5,7 @@ import prisma from "../prisma/connection"
 import jwt from "jsonwebtoken"
 import env from "dotenv"
 import { authCheck } from "../middleware/authcheck"
+import moment from "moment"
 env.config()
 
 const admin_routes = async (ad = fastify(), options) => {
@@ -136,7 +137,8 @@ const admin_routes = async (ad = fastify(), options) => {
 			)
 
 			res.setCookie("_app", token, {
-				expires: Date.now() + 60 * 60 * 1000,
+				// 1 hours
+				expires: Date.now() + 60 * 360 * 1000,
 			})
 
 			res.status(200).send({
@@ -185,6 +187,23 @@ const admin_routes = async (ad = fastify(), options) => {
 			}
 		}
 	)
+
+	//admin logout
+	ad.post("/admin_logout", async (req, res) => {
+		try {
+			//reset cookie
+			res.cookie("_app", null, { expires: Date.now() })
+			res.status(200).send({
+				success: true,
+				msg: "berhasil logout",
+			})
+		} catch (error) {
+			res.status(500).send({
+				success: false,
+				error: error.message,
+			})
+		}
+	})
 }
 
 export default admin_routes

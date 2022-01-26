@@ -2,8 +2,8 @@ import jwt from "jsonwebtoken"
 import env from "dotenv"
 env.config()
 
-export const authCheck = async (req, res, next) => {
-	let ck = await req.cookies["_app"]
+export const authCheck = (req, res, next) => {
+	let ck = req.cookies["_app"]
 	if (!ck) {
 		res.status(401).send({
 			success: false,
@@ -12,7 +12,7 @@ export const authCheck = async (req, res, next) => {
 		return
 	}
 
-	const verif = await jwt.verify(ck, process.env.ADMIN_SECRET_KEY)
+	const verif = jwt.verify(ck, process.env.ADMIN_SECRET_KEY)
 
 	if (!verif) {
 		res.status(401).send({
@@ -25,8 +25,8 @@ export const authCheck = async (req, res, next) => {
 	next()
 }
 
-export const authSiswa = async (req, res, next) => {
-	let ck = await req.cookies["_siswa"]
+export const authSiswa = (req, res, next) => {
+	let ck = req.cookies["_siswa"]
 	if (!ck) {
 		res.status(401).send({
 			success: false,
@@ -35,7 +35,7 @@ export const authSiswa = async (req, res, next) => {
 		return
 	}
 
-	let verif = await jwt.verify(ck, process.env.SISWA_SECRET_KEY)
+	let verif = jwt.verify(ck, process.env.SISWA_SECRET_KEY)
 
 	if (!verif) {
 		res.status(401).send({

@@ -15,10 +15,11 @@ import tugas_routes from "./routes/tugas_routes"
 import notifikasi_routes from "./routes/notifikasi_routes"
 import pengumuman_routes from "./routes/pengumuman_routes"
 import pageconfig_route from "./routes/pageconfig_routes"
+import auth_routes from "./routes/auth_routes"
 env.config()
 
 const app = Fastify({
-	logger: true,
+	logger: false,
 })
 
 app.register(multer.contentParser)
@@ -28,7 +29,7 @@ app.register(require("fastify-static"), {
 	root: path.join(__dirname, "static/"),
 })
 app.register(require("fastify-cors"), {
-	origin: "http://localhost:3000",
+	origin: ["http://localhost:3000", "http://localhost:3001"],
 	credential: true,
 })
 
@@ -45,29 +46,31 @@ app.register(siswa_route, {
 app.register(guru_route, {
 	prefix: "/api",
 })
-app.register(matpel_routes ,{
+app.register(matpel_routes, {
 	prefix: "/api",
 })
-app.register(kelas_routes ,{
+app.register(kelas_routes, {
 	prefix: "/api",
 })
-app.register(jadwal_routes ,{
+app.register(jadwal_routes, {
 	prefix: "/api",
 })
-app.register(walimurid_routes ,{
+app.register(walimurid_routes, {
 	prefix: "/api",
 })
-app.register(tugas_routes ,{
+app.register(tugas_routes, {
 	prefix: "/api",
 })
-app.register(notifikasi_routes ,{
+app.register(notifikasi_routes, {
 	prefix: "/api",
 })
-app.register(pengumuman_routes ,{
+app.register(pengumuman_routes, {
 	prefix: "/api",
 })
-
 app.register(pageconfig_route, {
+	prefix: "/api",
+})
+app.register(auth_routes, {
 	prefix: "/api",
 })
 

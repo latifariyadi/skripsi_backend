@@ -41,15 +41,15 @@ model Siswa {
   password            String    
   telp                String
   alamat_lengkap      String  
-  nis                 String            
+  nis                 String
+  kelas_id            Int               @default(1)            
   createdAt           DateTime          @default(now())
   updatedAt           DateTime          @updatedAt
 
   //relation
   avatar_siswa        Avatar_siswa?
-  kelas               Kelas?
   walimurid           Walimurid?
-  tugas               Tugas[]
+  kelas               Kelas             @relation(fields: [kelas_id], references: [id], onDelete: Cascade)
 
 }
 
@@ -68,16 +68,17 @@ model Avatar_siswa{
 model Kelas{
   id                  Int               @id @default(autoincrement())
   kelas               String
-  walikelas           Int
-  siswa_id            Int
+  sub_kelas           String            @unique
+  walikelas_id        Int                              
   createdAt           DateTime          @default(now())
   updatedAt           DateTime          @updatedAt
 
   //relation
-  siswa               Siswa             @relation(fields: [siswa_id], references: [id], onDelete: Cascade)
-  guru                Guru              @relation(fields: [walikelas], references: [id])
+
+  walikelas           Guru              @relation(fields: [walikelas_id], references: [id])
   jadwal              Jadwal[]
   tugas               Tugas[]
+  siswa               Siswa[]
 
 }
 
@@ -85,6 +86,7 @@ model Guru{
   id                  Int               @id @default(autoincrement())
   nama_lengkap        String
   email               String            @unique
+  matapelajaran_id    Int
   password            String    
   telp                String
   alamat_lengkap      String?  
@@ -93,8 +95,8 @@ model Guru{
 
   //relation
   kelas               Kelas?
-  matapelarajaran     Matapelajaran?
   avatar_guru         Avatar_guru?
+  matapelajaran       Matapelajaran    @relation(fields: [matapelajaran_id], references: [id], onDelete: SetNull)
 
 }
 
@@ -113,13 +115,12 @@ model Avatar_guru{
 model Matapelajaran{
   id                  Int               @id @default(autoincrement())
   nama                String
-  guru_id             Int
   createdAt           DateTime          @default(now())
   updatedAt           DateTime          @updatedAt
 
-  guru                Guru              @relation(fields: [guru_id], references: [id], onDelete: Cascade)
   jadwal              Jadwal[]
   tugas               Tugas[]
+  guru                Guru[]
 }
 
 model Walimurid{
@@ -142,7 +143,7 @@ model Jadwal{
   kelas_id            Int
   matapelajaran_id    Int       
   hari                String
-  jam                 DateTime
+  jam                 String
   createdAt           DateTime          @default(now())
   updatedAt           DateTime          @updatedAt
 
@@ -155,18 +156,17 @@ model Tugas{
   id                  Int               @id @default(autoincrement())
   matapelajaran_id    Int 
   kelas_id            Int
-  siswa_id            Int
-  tugas_banner_id     Int
   judul               String
+  status              String            @default("draft")
+  notif               Boolean           @default(true)
   materi              String
   akhir_kumpul        DateTime
-  link                String
-  createdAt           DateTime
-  updatedAt           DateTime
+  link                String?
+  createdAt           DateTime          @default(now())
+  updatedAt           DateTime          @updatedAt
 
   //relation
   kelas               Kelas             @relation(fields: [kelas_id], references: [id], onDelete: Cascade)
-  siswa               Siswa             @relation(fields: [siswa_id], references: [id], onDelete: Cascade)
   matapelajaran       Matapelajaran     @relation(fields: [matapelajaran_id], references: [id], onDelete: Cascade)
   tugas_banner        Tugas_banner?
 }
