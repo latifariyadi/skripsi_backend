@@ -23,13 +23,9 @@ const banner_storage = multer.diskStorage({
 
 export const avatar_uploads = multer({
 	storage: avatar_storage,
-	limits: {
-		fileSize: 10000000,
-	},
+	
 })
 export const banner_uploads = multer({
 	storage: banner_storage,
-	limits: {
-		fileSize: 10000000,
-	},
+
 })

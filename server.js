@@ -16,6 +16,7 @@ import notifikasi_routes from "./routes/notifikasi_routes"
 import pengumuman_routes from "./routes/pengumuman_routes"
 import pageconfig_route from "./routes/pageconfig_routes"
 import auth_routes from "./routes/auth_routes"
+import banner_tugas_route from "./routes/bannerTugas_route"
 env.config()
 
 const app = Fastify({
@@ -74,7 +75,11 @@ app.register(auth_routes, {
 	prefix: "/api",
 })
 
+app.register(banner_tugas_route, {
+	prefix: "/api",
+})
+
 //listener
 app.listen(process.env.PORT, () => {
-	console.log(`Listen port 5000}`)
+	console.log(`Listen port ${process.env.PORT}`)
 })

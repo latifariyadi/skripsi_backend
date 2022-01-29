@@ -191,7 +191,11 @@ const guru_route = async (gr = fastify(), options) => {
 			}
 
 			const result = await prisma.guru.findMany({
-				where: filter,
+				where: {
+					[filter.filter]: {
+						contains: filter.keyword,
+					},
+				},
 				include: {
 					matapelajaran: {
 						select: {
