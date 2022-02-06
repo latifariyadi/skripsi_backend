@@ -5,6 +5,8 @@ import prisma from "../prisma/connection"
 import jwt from "jsonwebtoken"
 import env from "dotenv"
 import { authCheck } from "../middleware/authcheck"
+import path from "path"
+import fs from "fs"
 import moment from "moment"
 env.config()
 
@@ -15,11 +17,12 @@ const admin_routes = async (ad = fastify(), options) => {
 			const { page = 0, limit = 10 } = await req.query
 			let skip = page * limit
 			const result = await prisma.admin.findMany({
-				take: limit,
-				skip: skip,
+				take: parseInt(limit),
+				skip: parseInt(skip),
 				select: {
 					id: true,
 					email: true,
+					role: true,
 					createdAt: true,
 					updatedAt: true,
 					avatar: {
@@ -85,7 +88,7 @@ const admin_routes = async (ad = fastify(), options) => {
 					return
 				}
 
-				res.send({
+				res.status(201).send({
 					success: true,
 					query: result,
 					file: file,
@@ -132,6 +135,7 @@ const admin_routes = async (ad = fastify(), options) => {
 					app_name: "fastify",
 					email: data.email,
 					id: result.id,
+					role: result.role,
 				},
 				process.env.ADMIN_SECRET_KEY
 			)
@@ -139,6 +143,7 @@ const admin_routes = async (ad = fastify(), options) => {
 			res.setCookie("_app", token, {
 				// 1 hours
 				expires: Date.now() + 60 * 360 * 1000,
+				httpOnly: true,
 			})
 
 			res.status(200).send({
@@ -160,7 +165,12 @@ const admin_routes = async (ad = fastify(), options) => {
 		async (req, res) => {
 			try {
 				const { id } = await req.params
-
+				const findAdmin = await prisma.admin.findUnique({
+					where: { id: parseInt(id) },
+					include: {
+						avatar: true,
+					},
+				})
 				const result = await prisma.admin.delete({
 					where: {
 						id: parseInt(id),
@@ -175,7 +185,15 @@ const admin_routes = async (ad = fastify(), options) => {
 					return
 				}
 
-				res.status(200).send({
+				//remove old file
+				const removeOldFile = await fs.unlinkSync(
+					path.join(
+						__dirname,
+						`../static/uploads/avatars/${findAdmin.avatar.filename}`
+					)
+				)
+
+				res.status(201).send({
 					success: true,
 					msg: "delete berhasil",
 				})
@@ -203,6 +221,99 @@ const admin_routes = async (ad = fastify(), options) => {
 				error: error.message,
 			})
 		}
+	})
+
+	//admin update
+	ad.put("/admin_update/:id", async (req, res) => {
+		try {
+			const { id } = await req.params
+			const data = await req.body
+			const findAdmin = await prisma.admin.findUnique({
+				where: {
+					id: parseInt(id),
+				},
+			})
+
+			if (data.newPassword) {
+				const compareOldNew = await comparePassword(
+					data.oldPassword,
+					findAdmin.password
+				)
+				if (!compareOldNew) {
+					res.status(401).send({
+						success: false,
+						msg: "password salah",
+					})
+					return
+				}
+
+				let updateAmdmin = await prisma.admin.update({
+					where: {
+						id: parseInt(id),
+					},
+					data: {
+						email: data.email,
+						password: hashPassword(data.newPassword),
+						role: data.role,
+					},
+				})
+
+				res.status(201).send({
+					success: true,
+					msg: "Berhasil update data",
+				})
+
+				return
+			}
+
+			let updateAdmin = await prisma.admin.update({
+				where: {
+					id: parseInt(id),
+				},
+				data: {
+					email: data.email,
+					role: data.role,
+				},
+			})
+
+			res.status(201).send({
+				success: true,
+				msg: "Berhasil update data",
+			})
+		} catch (error) {
+			res.status(500).send({
+				success: false,
+				error: error.message,
+			})
+		}
+	})
+
+	//admin find
+	ad.post("/admin_find/:id", async (req, res) => {
+		try {
+			const { id } = await req.params
+			const result = await prisma.admin.findUnique({
+				where: { id: parseInt(id) },
+				select: {
+					id: true,
+					role: true,
+					email: true,
+				},
+			})
+			if (!result) {
+				res.status(404).send({
+					success: false,
+					msg: "data tidak ditemukan",
+				})
+
+				return
+			}
+
+			res.status(200).send({
+				success: true,
+				query: result,
+			})
+		} catch (error) {}
 	})
 }
 

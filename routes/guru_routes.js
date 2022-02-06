@@ -179,7 +179,45 @@ const guru_route = async (gr = fastify(), options) => {
 	})
 
 	//GURU FIND
-	gr.post("/guru_find", async (req, res) => {
+	gr.post("/guru_find/:id", async (req, res) => {
+		try {
+			const { id } = await req.params
+			const result = await prisma.guru.findUnique({
+				where: {
+					id: parseInt(id),
+				},
+				include: {
+					matapelajaran: {
+						select: {
+							id: true,
+							nama: true,
+						},
+					},
+				},
+			})
+
+			if (!result) {
+				res.status(404).send({
+					success: false,
+					msg: "data tidak ditemukan",
+				})
+				return
+			}
+
+			res.status(200).send({
+				success: true,
+				query: result,
+			})
+		} catch (error) {
+			res.status(500).send({
+				success: false,
+				error: error.message,
+			})
+		}
+	})
+
+	//GURU SEARCH
+	gr.post("/guru_search", async (req, res) => {
 		try {
 			const { filter } = await req.body
 			if (!filter) {

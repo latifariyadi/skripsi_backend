@@ -1,6 +1,7 @@
 import React from "react"
 import { siswa_login, siswa_send_cookie } from "../apis/siswa_api"
 import { useNavigate } from "react-router-dom"
+import logo from "../assets/logo_sma.png"
 
 const LoginPage = () => {
 	const navigate = useNavigate()
@@ -25,10 +26,11 @@ const LoginPage = () => {
 	return (
 		<main className="w-screen min-h-screen bg-slate-100 flex flex-col p-8">
 			<div className="flex flex-col gap-2 uppercase">
+				<img src={logo} alt="" className="w-[80px]" />
 				<h1 className="text-5xl font-black text-primary-dark">Sistem</h1>
 				<h1 className="text-5xl font-black text-secondary-dark">Informasi</h1>
-				<h1 className="text-5xl font-black text-success-dark">Sekolah</h1>
-				<h3 className="font-bold text-gray-300">Sekolah itu menyenangkan</h3>
+				<h1 className="text-5xl font-black text-success-dark">Akademik</h1>
+				<h3 className=" text-gray-500 text-xl font-light">SMAN 12 OKU TIMUR</h3>
 			</div>
 
 			<div className="login_area flex flex-col mt-10" onSubmit={handleLogin}>

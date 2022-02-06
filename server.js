@@ -30,7 +30,7 @@ app.register(require("fastify-static"), {
 	root: path.join(__dirname, "static/"),
 })
 app.register(require("fastify-cors"), {
-	origin: ["http://localhost:3000", "http://localhost:3001"],
+	origin: "*",
 	credential: true,
 })
 

@@ -4,6 +4,7 @@ import prisma from "../prisma/connection"
 import jwt from "jsonwebtoken"
 import env from "dotenv"
 import { authCheck, authSiswa } from "../middleware/authcheck"
+import jvalleySleep from "jvalley-sleep"
 env.config()
 
 const siswa_route = async (sis = fastify(), options) => {

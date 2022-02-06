@@ -30,6 +30,7 @@ const auth_routes = async (ar = fastify(), options) => {
 			res.status(200).send({
 				success: true,
 				msg: "authorized",
+				user: jwt.decode(_app),
 			})
 		} catch (error) {
 			res.status(500).send({

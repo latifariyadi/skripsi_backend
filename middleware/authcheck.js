@@ -22,6 +22,8 @@ export const authCheck = (req, res, next) => {
 		return
 	}
 
+	req.user = jwt.decode(ck)
+
 	next()
 }
 
