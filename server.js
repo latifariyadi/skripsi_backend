@@ -19,7 +19,9 @@ import auth_routes from "./routes/auth_routes"
 import banner_tugas_route from "./routes/bannerTugas_route"
 env.config()
 
-const app = Fastify()
+const app = Fastify({
+	logger: true,
+})
 
 app.register(multer.contentParser)
 app.register(fastifyCookie)
@@ -78,6 +80,6 @@ app.register(banner_tugas_route, {
 })
 
 //listener
-app.listen(process.env.PORT, () => {
+app.listen(process.env.PORT, "0.0.0.0", () => {
 	console.log(`Listen port ${process.env.PORT}`)
 })
