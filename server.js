@@ -19,9 +19,7 @@ import auth_routes from "./routes/auth_routes"
 import banner_tugas_route from "./routes/bannerTugas_route"
 env.config()
 
-const app = Fastify({
-	logger: true,
-})
+const app = Fastify()
 
 app.register(multer.contentParser)
 app.register(fastifyCookie)
