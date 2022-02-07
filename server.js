@@ -30,7 +30,8 @@ app.register(require("fastify-static"), {
 	root: path.join(__dirname, "static/"),
 })
 app.register(require("fastify-cors"), {
-	origin: ["http://5.181.217.215:6002", "http://5.181.217.215:6001"],
+	origin: "*",
+	credential: true,
 })
 
 //routes
