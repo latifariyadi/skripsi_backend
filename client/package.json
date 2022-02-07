@@ -18,8 +18,8 @@
 		"web-vitals": "^2.1.3"
 	},
 	"scripts": {
-		"serve": "serve -l tcp://0.0.0.0:6002 build",
-		"start": "react-scripts start",
+		"start": "serve -l tcp://0.0.0.0:6002 build",
+		"serve": "react-scripts start",
 		"build": "react-scripts build",
 		"test": "react-scripts test",
 		"eject": "react-scripts eject"
