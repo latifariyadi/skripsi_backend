@@ -31,7 +31,6 @@ app.register(require("fastify-static"), {
 })
 app.register(require("fastify-cors"), {
 	origin: "*",
-	credential: true,
 })
 
 //routes

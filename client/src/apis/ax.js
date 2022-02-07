@@ -1,7 +1,7 @@
 import axios from "axios"
 
 const ax = axios.create({
-	baseURL: "/api",
+	baseURL: "https://skripsi_latif_api.jvalleyserver.net/api",
 	responseType: "json",
 	withCredentials: true,
 })
