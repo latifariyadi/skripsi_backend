@@ -8,7 +8,7 @@ export const siswa_login = async (data) => {
 			data: data,
 			headers: {
 				"Content-Type": "application/json",
-				"Access-control-allow-origin": "http://localhost:3000",
+				"Access-control-allow-origin": "*",
 			},
 		})
 

@@ -2,24 +2,28 @@ import React from "react"
 import { siswa_login, siswa_send_cookie } from "../apis/siswa_api"
 import { useNavigate } from "react-router-dom"
 import logo from "../assets/logo_sma.png"
+import { Modal } from "antd"
+import ax from "../apis/ax"
 
 const LoginPage = () => {
 	const navigate = useNavigate()
 	const handleLogin = (e) => {
 		e.preventDefault()
-		siswa_login({
+		ax.post("/siswa_login", {
 			email: e.target.email.value,
 			password: e.target.password.value,
 		})
 			.then((result) => {
-				if (result.data.success) {
+				if (result) {
 					// alert("login berhasil")
 					sessionStorage.setItem("token", result.data.token)
 					navigate("/dashboard")
 				}
 			})
 			.catch((err) => {
-				console.error(err.response.data)
+				Modal.warning({
+					title: err.response.data.msg,
+				})
 			})
 	}
 
