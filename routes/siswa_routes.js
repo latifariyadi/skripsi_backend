@@ -96,6 +96,7 @@ const siswa_route = async (sis = fastify(), options) => {
 		"/siswa_login",
 		{
 			preHandler: (req, res, next) => {
+				req.headers["access-control-allow-origin"] = "*"
 				res.header("access-control-allow-origin", "*")
 				next()
 			},
