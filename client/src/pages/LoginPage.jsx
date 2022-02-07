@@ -9,19 +9,13 @@ const LoginPage = () => {
 	const navigate = useNavigate()
 	const handleLogin = (e) => {
 		e.preventDefault()
-		ax.post(
-			"/siswa_login",
-			{
+		ax("/siswa_login", {
+			method: "POST",
+			data: {
 				email: e.target.email.value,
 				password: e.target.password.value,
 			},
-			{
-				headers: {
-					"Content-Type": "application/json",
-					"Access-control-allow-origin": "*",
-				},
-			}
-		)
+		})
 			.then((result) => {
 				if (result) {
 					// alert("login berhasil")
