@@ -92,57 +92,66 @@ const siswa_route = async (sis = fastify(), options) => {
 	})
 
 	//login siswa
-	sis.post("/siswa_login", async (req, res) => {
-		try {
-			const data = await req.body
-			const checkSiswa = await prisma.siswa.findUnique({
-				where: {
-					email: data.email,
-				},
-			})
-
-			if (!checkSiswa) {
-				res.status(404).send({
-					success: false,
-					msg: "email siswa tidak ditemukan",
+	sis.post(
+		"/siswa_login",
+		{
+			preHandler: (req, res, next) => {
+				res.header("access-control-allow-origin", "*")
+				next()
+			},
+		},
+		async (req, res) => {
+			try {
+				const data = await req.body
+				const checkSiswa = await prisma.siswa.findUnique({
+					where: {
+						email: data.email,
+					},
 				})
-				return
-			}
 
-			const comparePass = await comparePassword(
-				data.password,
-				checkSiswa.password
-			)
+				if (!checkSiswa) {
+					res.status(404).send({
+						success: false,
+						msg: "email siswa tidak ditemukan",
+					})
+					return
+				}
 
-			if (!comparePass) {
-				res.status(404).send({
-					success: false,
-					msg: "password siswa salah",
+				const comparePass = await comparePassword(
+					data.password,
+					checkSiswa.password
+				)
+
+				if (!comparePass) {
+					res.status(404).send({
+						success: false,
+						msg: "password siswa salah",
+					})
+					return
+				}
+
+				//generated siswa token
+				const token = await jwt.sign(
+					{
+						...checkSiswa,
+						password: "secret",
+					},
+					process.env.SISWA_SECRET_KEY
+				)
+
+				res.setCookie("_siswa", token, { httpOnly: true })
+				res.status(200).send({
+					success: true,
+					token: token,
 				})
-				return
+			} catch (error) {
+				res.status(500).send({
+					success: false,
+					error: error.message,
+				})
 			}
-
-			//generated siswa token
-			const token = await jwt.sign(
-				{
-					...checkSiswa,
-					password: "secret",
-				},
-				process.env.SISWA_SECRET_KEY
-			)
-
-			res.setCookie("_siswa", token, { httpOnly: true })
-			res.status(200).send({
-				success: true,
-				token: token,
-			})
-		} catch (error) {
-			res.status(500).send({
-				success: false,
-				error: error.message,
-			})
 		}
-	})
+	)
 
 	//delete siswa => previleges admin
 	sis.delete(

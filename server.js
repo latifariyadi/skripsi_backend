@@ -31,6 +31,8 @@ app.register(require("fastify-static"), {
 })
 app.register(require("fastify-cors"), {
 	origin: "*",
+	credentials: true,
+	methods: ["POST", "GET", "PUT", "DELETE"],
 })
 
 //routes

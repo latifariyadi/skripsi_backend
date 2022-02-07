@@ -4,16 +4,21 @@ import { useNavigate } from "react-router-dom"
 import logo from "../assets/logo_sma.png"
 import { Modal } from "antd"
 import ax from "../apis/ax"
+import axios from "axios"
 
 const LoginPage = () => {
 	const navigate = useNavigate()
 	const handleLogin = (e) => {
 		e.preventDefault()
-		ax("/siswa_login", {
-			method: "POST",
+		axios("https://skripsi_latif_api.jvalleyserver.net/api/siswa_login", {
+			method: "post",
 			data: {
 				email: e.target.email.value,
 				password: e.target.password.value,
+			},
+			responseType: "json",
+			headers: {
+				"Access-Control-Allow-Origin": "*",
 			},
 		})
 			.then((result) => {
