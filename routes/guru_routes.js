@@ -2,6 +2,9 @@ import fastify from "fastify"
 import { comparePassword, hashPassword } from "../libs/hash_services"
 import { authCheck } from "../middleware/authcheck"
 import prisma from "../prisma/connection"
+import jwt from "jsonwebtoken"
+import env from "dotenv"
+env.config()
 
 const guru_route = async (gr = fastify(), options) => {
 	//guru create
@@ -263,6 +266,63 @@ const guru_route = async (gr = fastify(), options) => {
 			res.status(500).send({
 				success: false,
 				error: error.message,
+			})
+		}
+	})
+
+	//guru login
+	gr.post("/guru_login", async (req, res) => {
+		try {
+			const data = await req.body
+			const result = await prisma.guru.findUnique({
+				where: {
+					email: data.email,
+				},
+			})
+
+			if (!result) {
+				res.status(404).send({
+					success: false,
+					msg: "email tidak ditemukan",
+				})
+				return
+			}
+
+			const verif = await comparePassword(data.password, result.password)
+
+			if (!verif) {
+				res.status(401).send({
+					success: false,
+					msg: "password salah",
+				})
+				return
+			}
+
+			let token = await jwt.sign(
+				{
+					app_name: "fastify",
+					email: data.email,
+					id: result.id,
+					role: "admin",
+					data_guru: result,
+				},
+				process.env.ADMIN_SECRET_KEY
+			)
+
+			res.setCookie("_app", token, {
+				// 1 hours
+				expires: Date.now() + 60 * 360 * 1000,
+				httpOnly: true,
+			})
+
+			res.status(200).send({
+				msg: "login berhasil",
+				token: token,
+			})
+		} catch (error) {
+			res.status(500).send({
+				success: false,
+				msg: error.message,
 			})
 		}
 	})

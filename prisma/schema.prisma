@@ -49,6 +49,7 @@ model Siswa {
   //relation
   avatar_siswa        Avatar_siswa?
   walimurid           Walimurid?
+  absensi             Absensi[]
   kelas               Kelas             @relation(fields: [kelas_id], references: [id], onDelete: Cascade)
 
 }
@@ -96,6 +97,7 @@ model Guru{
   //relation
   kelas               Kelas?
   avatar_guru         Avatar_guru?
+  absensi             Absensi[]
   matapelajaran       Matapelajaran    @relation(fields: [matapelajaran_id], references: [id], onDelete: SetNull)
 
 }
@@ -121,6 +123,7 @@ model Matapelajaran{
   jadwal              Jadwal[]
   tugas               Tugas[]
   guru                Guru[]
+  absensi             Absensi[]
 }
 
 model Walimurid{
@@ -148,6 +151,7 @@ model Jadwal{
   updatedAt           DateTime          @updatedAt
 
   //
+  absensi             Absensi[]
   kelas               Kelas             @relation(fields: [kelas_id], references: [id], onDelete: Cascade)
   matapelarajan       Matapelajaran     @relation(fields: [matapelajaran_id], references: [id], onDelete: Cascade)
 }
@@ -202,4 +206,21 @@ model Pengumuman {
   valid_until       DateTime  
   createdAt         DateTime        @default(now())
   updatedAt         DateTime        @updatedAt      
+}
+
+model Absensi{
+  id                  Int             @id @default(autoincrement())
+  matapelajaran_id    Int
+  guru_id             Int
+  siswa_id            Int
+  jadwal_id           Int
+  created_at          DateTime        @default(now())
+  updated_at          DateTime        @updatedAt
+
+
+  //relation
+  matapelajaran     Matapelajaran     @relation(fields: [matapelajaran_id], references: [id], onDelete: Cascade)
+  guru              Guru              @relation(fields: [guru_id], references: [id], onDelete: Cascade)
+  siswa             Siswa             @relation(fields: [siswa_id], references: [id], onDelete: Cascade)
+  jadwal            Jadwal            @relation(fields: [jadwal_id], references: [id], onDelete: Cascade)
 }

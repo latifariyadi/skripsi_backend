@@ -11,14 +11,16 @@ const LoginPage = () => {
 	const handleLogin = (e) => {
 		e.preventDefault()
 		axios("https://skripsi_latif_api.jvalleyserver.net/api/siswa_login", {
-			method: "post",
+			method: "POST",
 			data: {
 				email: e.target.email.value,
 				password: e.target.password.value,
 			},
 			responseType: "json",
 			headers: {
-				"Access-Control-Allow-Origin": "*",
+				"access-control-allow-origin": "*",
+				"content-type": "application/json",
+				origin: "*",
 			},
 		})
 			.then((result) => {

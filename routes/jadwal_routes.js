@@ -32,6 +32,14 @@ const jadwal_routes = async (jadwal = festify(), Option) => {
 			let skip = page * limit
 
 			const result = await prisma.jadwal.findMany({
+				include: {
+					matapelarajan: {
+						select: {
+							id: true,
+							nama: true,
+						},
+					},
+				},
 				skip: parseInt(skip),
 				take: parseInt(limit),
 			})

@@ -314,6 +314,29 @@ const siswa_route = async (sis = fastify(), options) => {
 		}
 	})
 
+	sis.post("/siswa_find_kelas", async (req, res) => {
+		try {
+			const { kelas_id } = await req.body
+			const result = await prisma.siswa.findMany({
+				where: {
+					kelas_id: kelas_id,
+				},
+				orderBy: {
+					nama_lengkap: "asc",
+				},
+			})
+			res.status(200).send({
+				success: true,
+				query: result,
+			})
+		} catch (error) {
+			res.status(500).send({
+				success: false,
+				error: error.message,
+			})
+		}
+	})
+
 	//siswa send back cookie
 	sis.post("/siswa_send_cookie", (req, res) => {
 		let ck = req.cookies["_siswa"]

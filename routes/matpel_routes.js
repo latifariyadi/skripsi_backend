@@ -36,6 +36,7 @@ const matpel_routes = async (matpel = festify(), options) => {
 				include: {
 					guru: {
 						select: {
+							id: true,
 							nama_lengkap: true,
 						},
 					},

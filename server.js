@@ -17,6 +17,7 @@ import pengumuman_routes from "./routes/pengumuman_routes"
 import pageconfig_route from "./routes/pageconfig_routes"
 import auth_routes from "./routes/auth_routes"
 import banner_tugas_route from "./routes/bannerTugas_route"
+import absensi_routes from "./routes/absensi_routes"
 env.config()
 
 const app = Fastify({
@@ -77,6 +78,10 @@ app.register(auth_routes, {
 })
 
 app.register(banner_tugas_route, {
+	prefix: "/api",
+})
+
+app.register(absensi_routes, {
 	prefix: "/api",
 })
 
